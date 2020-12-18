@@ -35,7 +35,7 @@ class Detector(torch.nn.Module):
         """
         super().__init__()
 
-        c = 3
+        c = 1
         self.use_skip = use_skip
         self.n_conv = len(layers)
         skip_layer_size = [3] + layers[:-1]
