@@ -20,7 +20,7 @@ class SuperTuxDataset(Dataset):
         from os import path
         self.data = []
         self.transform = transform
-        with open(path.join(dataset_path, 'labels.csv'), newline='') as f:
+        with open(dataset_path, 'labels.csv', newline='') as f:
             reader = csv.reader(f)
             for fname, label, _ in reader:
                 if label in LABEL_NAMES:
