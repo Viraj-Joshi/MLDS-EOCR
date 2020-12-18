@@ -22,7 +22,7 @@ class SuperTuxDataset(Dataset):
         self.transform = transform
         with open('labels.csv', newline='') as f:
             reader = csv.reader(f)
-            for fname, label, _ in reader:
+            for fname, label in reader:
                 if label in LABEL_NAMES:
                     image = Image.open(path.join(dataset_path, fname))
                     image.load()
