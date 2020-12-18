@@ -63,13 +63,12 @@ class Detector(torch.nn.Module):
             x = self._modules['conv%d' % i](x)
 
         for i in reversed(range(self.n_conv)):
-            if i < 5:
-                x = self._modules['upconv%d' % i](x)
-                # Fix the padding
-                x = x[:, :, :up_activation[i].size(2), :up_activation[i].size(3)]
-                # Add the skip connection
-                if self.use_skip:
-                    x = torch.cat([x, up_activation[i]], dim=1)
+            x = self._modules['upconv%d' % i](x)
+            # Fix the padding
+            x = x[:, :, :up_activation[i].size(2), :up_activation[i].size(3)]
+            # Add the skip connection
+            if self.use_skip:
+                x = torch.cat([x, up_activation[i]], dim=1)
         return self.classifier(x)
 
 
