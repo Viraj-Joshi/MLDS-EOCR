@@ -48,7 +48,8 @@ class Detector(torch.nn.Module):
             c = l
             if self.use_skip:
                 c += skip_layer_size[i]
-        self.classifier = torch.nn.Conv2d(c, n_class, 1)
+        self.classifier = torch.nn.ConvTranspose2d(c, n_class, kernel_size=kernel_size, padding=kernel_size // 2,
+                                               stride=2, output_padding=1)
 
     def forward(self, x):
         """
