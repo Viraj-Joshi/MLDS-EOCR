@@ -5,12 +5,13 @@ import matplotlib.pyplot as plt
 
 from PIL import Image
 LABEL_NAMES = [i for i in range(43)]
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
+from torchvision.transforms import functional as Fs
 
 
 class SuperTuxDataset(Dataset):
-    def __init__(self, dataset_path):
+    def __init__(self, dataset_path,transform=transforms.ToTensor()):
         """
         Your code here
         Hint: Use the python csv library to parse labels.csv
