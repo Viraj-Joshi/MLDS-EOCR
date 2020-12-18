@@ -62,7 +62,7 @@ class Detector(torch.nn.Module):
             up_activation.append(x)
             x = self._modules['conv%d' % i](x)
 
-        for i in range(self.n_conv)[-5::-1]:
+        for i in range(self.n_conv)[::-1]:
             x = self._modules['upconv%d' % i](x)
             # Fix the padding
             x = x[:, :, :up_activation[i].size(2), :up_activation[i].size(3)]
