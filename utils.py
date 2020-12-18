@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from PIL import Image
-LABEL_NAMES = [i for i in range(0,43)]
+LABEL_NAMES = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42]
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 from torchvision.transforms import functional as Fs
@@ -19,8 +19,9 @@ class SuperTuxDataset(Dataset):
         with open(path.join('labels.csv'), newline='') as f:
             reader = csv.reader(f)
             for fname, label in reader:
-                if label in LABEL_NAMES:
-                    image = Image.open(path.join(dataset_path, fname))
+                if label != 'Y' and int(fname) in LABEL_NAMES:
+                    im_name = '%0*d' % (5, fname+1) + ".jpg"
+                    image = Image.open(path.join(dataset_path, im_name))
                     image.load()
                     label_id = LABEL_NAMES.index(label)
                     self.data.append((image, label_id))
