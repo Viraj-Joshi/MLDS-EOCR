@@ -6,7 +6,7 @@ from os import path
 
 import torch.utils.tensorboard as tb
 
-TRAIN_PATH = "data"
+TRAIN_PATH = "data/"
 
 train_data = load_data(TRAIN_PATH)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
