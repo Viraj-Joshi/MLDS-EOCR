@@ -1,5 +1,5 @@
-from .models import Detector, save_model
-from .utils import accuracy, load_data, ConfusionMatrix,LABEL_NAMES
+from models import Detector, save_model
+from utils import accuracy, load_data, ConfusionMatrix,LABEL_NAMES
 import torch
 import numpy as np
 from os import path
