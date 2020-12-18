@@ -43,13 +43,12 @@ class Detector(torch.nn.Module):
             self.add_module('conv%d' % i, self.Block(c, l, kernel_size, 2))
             c = l
         # Produce lower res output
-        for i, l in list(enumerate(layers))[::-1]:
+        for i, l in list(enumerate(layers))[-5::-1]:
             self.add_module('upconv%d' % i, self.UpBlock(c, l, kernel_size, 2))
             c = l
             if self.use_skip:
                 c += skip_layer_size[i]
-        self.classifier = torch.nn.ConvTranspose2d(c, n_class, kernel_size=kernel_size, padding=kernel_size // 2,
-                                               stride=2, output_padding=1)
+        self.classifier = torch.nn.Conv2d(c, n_class, 1)
 
     def forward(self, x):
         """
