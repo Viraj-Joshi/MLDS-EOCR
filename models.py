@@ -43,7 +43,7 @@ class Detector(torch.nn.Module):
             self.add_module('conv%d' % i, self.Block(c, l, kernel_size, 2))
             c = l
         # Produce lower res output
-        for i, l in list(enumerate(layers))[-4::-1]:
+        for i, l in list(enumerate(layers))[::-1]:
             self.add_module('upconv%d' % i, self.UpBlock(c, l, kernel_size, 2))
             c = l
             if self.use_skip:
@@ -63,12 +63,13 @@ class Detector(torch.nn.Module):
             x = self._modules['conv%d' % i](x)
 
         for i in reversed(range(self.n_conv)):
-            x = self._modules['upconv%d' % i](x)
-            # Fix the padding
-            x = x[:, :, :up_activation[i].size(2), :up_activation[i].size(3)]
-            # Add the skip connection
-            if self.use_skip:
-                x = torch.cat([x, up_activation[i]], dim=1)
+            if i < 5:
+                x = self._modules['upconv%d' % i](x)
+                # Fix the padding
+                x = x[:, :, :up_activation[i].size(2), :up_activation[i].size(3)]
+                # Add the skip connection
+                if self.use_skip:
+                    x = torch.cat([x, up_activation[i]], dim=1)
         return self.classifier(x)
 
 
