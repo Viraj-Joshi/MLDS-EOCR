@@ -27,6 +27,7 @@ class SuperTuxDataset(Dataset):
                     image = Image.open(path.join(dataset_path, fname))
                     image.load()
                     label_id = LABEL_NAMES.index(label)
+                    print(label_id)
                     self.data.append((image, label_id))
 
     def __len__(self):
@@ -48,7 +49,7 @@ class SuperTuxDataset(Dataset):
         return self.transform(img), lbl
 
 
-def load_data(dataset_path, num_workers=0, batch_size=128):
+def load_data(dataset_path, num_workers=0, batch_size=256):
     dataset = SuperTuxDataset(dataset_path)
     return DataLoader(dataset, num_workers=num_workers, batch_size=batch_size, 
                         shuffle=True, drop_last=False)
