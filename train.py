@@ -1,6 +1,6 @@
 from models import Detector, save_model
 from utils import accuracy, load_data, ConfusionMatrix,LABEL_NAMES
-import torch
+import torch,torchvision
 import numpy as np
 from os import path
 from torchvision import transforms
@@ -77,7 +77,7 @@ if __name__ == '__main__':
     parser.add_argument('-lr', '--learning_rate', type=float, default=1e-2)
     parser.add_argument('-c', '--continue_training', action='store_true')
     parser.add_argument('-t', '--transform',
-                        default='Compose([ColorJitter(0.9, 0.9, 0.9, 0.1), RandomHorizontalFlip(), ToTensor()])')
+                        default='Compose([RandomHorizontalFlip(), ToTensor()])')
 
     args = parser.parse_args()
     train(args)
