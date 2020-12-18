@@ -3,6 +3,8 @@ from utils import accuracy, load_data, ConfusionMatrix,LABEL_NAMES
 import torch
 import numpy as np
 from os import path
+from torchvision import transforms
+from torchvision.transforms import functional as F
 
 import torch.utils.tensorboard as tb
 
