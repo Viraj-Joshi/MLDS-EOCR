@@ -29,6 +29,10 @@ class Detector(torch.nn.Module):
             return F.relu(self.c1(x))
 
     def __init__(self, layers=[16, 32, 64, 128,128,256], n_class=43, kernel_size=3, use_skip=True):
+        """
+           Your code here.
+           Setup your detection network
+        """
         super().__init__()
 
         c = 1
@@ -39,7 +43,7 @@ class Detector(torch.nn.Module):
             self.add_module('conv%d' % i, self.Block(c, l, kernel_size, 2))
             c = l
         # Produce lower res output
-        for i, l in list(enumerate(layers))[::-1]:
+        for i, l in list(enumerate(layers))[-4::-1]:
             self.add_module('upconv%d' % i, self.UpBlock(c, l, kernel_size, 2))
             c = l
             if self.use_skip:
@@ -47,14 +51,11 @@ class Detector(torch.nn.Module):
         self.classifier = torch.nn.Conv2d(c, n_class, 1)
 
     def forward(self, x):
-
-        H = x.shape[2]
-        W = x.shape[3]
-        if H < 16: 
-            x = torch.nn.functional.pad(x,(0,0,8-H,0))
-        if W < 16:
-            x = torch.nn.functional.pad(x,(0,8-W,0,0))
-            
+        """
+           Your code here.
+           Implement a forward pass through the network, use forward for training,
+           and detect for detection
+        """
         up_activation = []
         for i in range(self.n_conv):
             # Add all the information required for skip connections
