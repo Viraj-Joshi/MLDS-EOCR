@@ -20,10 +20,10 @@ class SuperTuxDataset(Dataset):
             reader = csv.reader(f)
             for fname, label in reader:
                 if label != 'Y' and int(fname) in LABEL_NAMES:
-                    im_name = '%0*d' % (5, fname+1) + ".jpg"
+                    im_name = '%0*d' % (5, int(fname)+1) + ".jpg"
                     image = Image.open(path.join(dataset_path, im_name))
                     image.load()
-                    label_id = LABEL_NAMES.index(label)
+                    label_id = LABEL_NAMES.index(int(label))
                     self.data.append((image, label_id))
 
     def __len__(self):
