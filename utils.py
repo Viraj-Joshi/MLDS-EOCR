@@ -12,15 +12,11 @@ from torchvision.transforms import functional as Fs
 
 class SuperTuxDataset(Dataset):
     def __init__(self, dataset_path,transform=transforms.ToTensor()):
-        """
-        Your code here
-        Hint: Use the python csv library to parse labels.csv
-        """
         import csv
         from os import path
         self.data = []
         self.transform = transform
-        with open('labels.csv', newline='') as f:
+        with open(path.join('labels.csv'), newline='') as f:
             reader = csv.reader(f)
             for fname, label in reader:
                 if label in LABEL_NAMES:
