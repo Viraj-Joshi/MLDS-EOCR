@@ -39,7 +39,6 @@ def train(args):
             img, label = img.to(device), label.to(device)
 
             logit = model(img)
-            print(logit)
             loss_val = loss(logit, label)
             confusion.add(logit.argmax(1), label)
 
