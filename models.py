@@ -47,12 +47,10 @@ class Detector(torch.nn.Module):
 
     def forward(self, x):
         up_activation = []
-        print(x.shape)
         for i in range(self.n_conv):
             # Add all the information required for skip connections
             up_activation.append(x)
             x = self._modules['conv%d' % i](x)
-            print(x.shape)
 
         for i in reversed(range(self.n_conv)):
             x = self._modules['upconv%d' % i](x)
@@ -61,7 +59,6 @@ class Detector(torch.nn.Module):
             # Add the skip connection
             if self.use_skip:
                 x = torch.cat([x, up_activation[i]], dim=1)
-            print(x.shape)
         x = self.classifier(x)
         x = x.mean([2,3])
         return x
