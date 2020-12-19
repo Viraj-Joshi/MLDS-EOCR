@@ -51,18 +51,13 @@ class Detector(torch.nn.Module):
         self.classifier = torch.nn.Conv2d(c, n_class, 1)
 
     def forward(self, x):
-        """
-           Your code here.
-           Implement a forward pass through the network, use forward for training,
-           and detect for detection
-        """
         up_activation = []
-        for i in range(self.n_conv):
+        for i in range(self.n_conv)[0:5]:
             # Add all the information required for skip connections
             up_activation.append(x)
             x = self._modules['conv%d' % i](x)
 
-        for i in range(self.n_conv)[::-1]:
+        for i in range(self.n_conv)[-5::-1]:
             x = self._modules['upconv%d' % i](x)
             # Fix the padding
             x = x[:, :, :up_activation[i].size(2), :up_activation[i].size(3)]
