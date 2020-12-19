@@ -29,10 +29,6 @@ class Detector(torch.nn.Module):
             return F.relu(self.c1(x))
 
     def __init__(self, layers=[16, 32, 64, 128,128,256], n_class=43, kernel_size=3, use_skip=True):
-        """
-           Your code here.
-           Setup your detection network
-        """
         super().__init__()
 
         c = 1
@@ -43,7 +39,7 @@ class Detector(torch.nn.Module):
             self.add_module('conv%d' % i, self.Block(c, l, kernel_size, 2))
             c = l
         # Produce lower res output
-        for i, l in list(enumerate(layers))[-5::-1]:
+        for i, l in list(enumerate(layers))[::-1]:
             self.add_module('upconv%d' % i, self.UpBlock(c, l, kernel_size, 2))
             c = l
             if self.use_skip:
@@ -57,7 +53,7 @@ class Detector(torch.nn.Module):
             up_activation.append(x)
             x = self._modules['conv%d' % i](x)
 
-        for i in range(self.n_conv)[-5::-1]:
+        for i in range(self.n_conv)[::-1]:
             x = self._modules['upconv%d' % i](x)
             # Fix the padding
             x = x[:, :, :up_activation[i].size(2), :up_activation[i].size(3)]
