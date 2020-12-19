@@ -17,7 +17,7 @@ def train(args):
     if args.log_dir is not None:
         train_logger = tb.SummaryWriter(path.join(args.log_dir, 'train'), flush_secs=1)
     LABEL_NAMES = [str(i) for i in range(0,43)]
-    train_data = load_data(TRAIN_PATH,batch_size=256)
+    
     model = Detector().to(device)
     if args.continue_training:
         model.load_state_dict(torch.load(path.join(path.dirname(path.abspath(__file__)), 'det.th')))
@@ -28,6 +28,7 @@ def train(args):
     import inspect
     transform = eval(args.transform,
                         {k: v for k, v in inspect.getmembers(torchvision.transforms) if inspect.isclass(v)})
+    train_data = load_data(TRAIN_PATH,batch_size=256,transform = transform)
 
     global_step = 0
     for epoch in range(args.num_epoch):
@@ -54,6 +55,9 @@ def train(args):
             train_logger.add_scalar('accuracy', confusion.global_accuracy, global_step)
             import matplotlib.pyplot as plt
             f, ax = plt.subplots()
+            f.set_figheight(30)
+            f.set_figwidth(30)
+
             ax.imshow(confusion.per_class, interpolation='nearest', cmap=plt.cm.Blues)
             for i in range(confusion.per_class.size(0)):
                 for j in range(confusion.per_class.size(1)):
@@ -75,7 +79,7 @@ if __name__ == '__main__':
     parser.add_argument('-lr', '--learning_rate', type=float, default=1e-2)
     parser.add_argument('-c', '--continue_training', action='store_true')
     parser.add_argument('-t', '--transform',
-                        default='Compose([RandomHorizontalFlip(), ToTensor()])')
+                        default='Compose([RandomPerspective(.5,.6),RandomHorizontalFlip(), ToTensor()])')
 
     args = parser.parse_args()
     train(args)
