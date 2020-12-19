@@ -1,5 +1,5 @@
 from models import Detector, save_model
-from utils import accuracy, load_data, ConfusionMatrix,LABEL_NAMES
+from utils import accuracy, load_data, ConfusionMatrix
 import torch,torchvision
 import numpy as np
 from os import path
@@ -16,7 +16,7 @@ def train(args):
     train_logger = None
     if args.log_dir is not None:
         train_logger = tb.SummaryWriter(path.join(args.log_dir, 'train'), flush_secs=1)
-
+    LABEL_NAMES = [str(i) for i in range(0,43)]
     train_data = load_data(TRAIN_PATH,batch_size=256)
     model = Detector().to(device)
     if args.continue_training:
@@ -39,6 +39,7 @@ def train(args):
             img, label = img.to(device), label.to(device)
 
             logit = model(img)
+            print(logit)
             loss_val = loss(logit, label)
             confusion.add(logit.argmax(1), label)
 

@@ -4,7 +4,6 @@ import pandas as pd
 import torch
 
 from PIL import Image
-LABEL_NAMES = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42]
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 from torchvision.transforms import functional as Fs
@@ -16,20 +15,18 @@ class SuperTuxDataset(Dataset):
         from os import path
         self.data = []
         self.transform = transform
-        with open(path.join('labels.csv'), newline='') as f:
+        LABEL_NAMES = [str(i) for i in range(0,43)]
+        with open('labels.csv') as f:
             reader = csv.reader(f)
             for fname, label in reader:
-                if label != 'Y' and int(fname) in LABEL_NAMES:
+                if label in LABEL_NAMES:
                     im_name = '%0*d' % (5, int(fname)+1) + ".jpg"
                     image = Image.open(path.join(dataset_path, im_name))
                     image.load()
-                    label_id = LABEL_NAMES.index(int(label))
+                    label_id = LABEL_NAMES.index(label)
                     self.data.append((image, label_id))
 
     def __len__(self):
-        """
-        Your code here
-        """
         return len(self.data)
 
     def __getitem__(self, idx):
@@ -45,7 +42,7 @@ class SuperTuxDataset(Dataset):
         return self.transform(img), lbl
 
 
-def load_data(dataset_path, num_workers=4, batch_size=256):
+def load_data(dataset_path, num_workers=0, batch_size=256):
     dataset = SuperTuxDataset(dataset_path)
     return DataLoader(dataset, num_workers=num_workers, batch_size=batch_size, 
                         shuffle=True, drop_last=False)
@@ -54,6 +51,9 @@ def load_data(dataset_path, num_workers=4, batch_size=256):
 def accuracy(outputs, labels):
     outputs_idx = outputs.max(1)[1].type_as(labels)
     return outputs_idx.eq(labels).float().mean()
+  
+def _one_hot(x, n):
+    return (x.view(-1, 1) == torch.arange(n, dtype=x.dtype, device=x.device)).int()
 
 class ConfusionMatrix(object):
     def _make(self, preds, labels):

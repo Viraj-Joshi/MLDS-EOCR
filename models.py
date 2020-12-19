@@ -28,9 +28,8 @@ class Detector(torch.nn.Module):
         def forward(self, x):
             return F.relu(self.c1(x))
 
-    def __init__(self, layers=[3,16, 32, 64, 128,128,256], n_class=43, kernel_size=3, use_skip=True):
+    def __init__(self, layers=[16,32,64, 128,256,512], n_class=43, kernel_size=3, use_skip=True):
         super().__init__()
-
         c = 1
         self.use_skip = use_skip
         self.n_conv = len(layers)
@@ -44,23 +43,28 @@ class Detector(torch.nn.Module):
             c = l
             if self.use_skip:
                 c += skip_layer_size[i]
-        self.classifier = torch.nn.Conv2d(c, n_class, 1)
+        self.classifier = torch.nn.Conv2d(c-2, n_class, 1)
 
     def forward(self, x):
         up_activation = []
+        print(x.shape)
         for i in range(self.n_conv):
             # Add all the information required for skip connections
             up_activation.append(x)
             x = self._modules['conv%d' % i](x)
+            print(x.shape)
 
-        for i in range(self.n_conv)[::-1]:
+        for i in reversed(range(self.n_conv)):
             x = self._modules['upconv%d' % i](x)
             # Fix the padding
             x = x[:, :, :up_activation[i].size(2), :up_activation[i].size(3)]
             # Add the skip connection
             if self.use_skip:
                 x = torch.cat([x, up_activation[i]], dim=1)
-        return self.classifier(x)
+            print(x.shape)
+        x = self.classifier(x)
+        x = x.mean([2,3])
+        return x
 
 
 def save_model(model):
