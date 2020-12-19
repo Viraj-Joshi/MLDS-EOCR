@@ -28,7 +28,7 @@ class Detector(torch.nn.Module):
         def forward(self, x):
             return F.relu(self.c1(x))
 
-    def __init__(self, layers=[16,32,64, 128,256,512], n_class=43, kernel_size=3, use_skip=True):
+    def __init__(self, layers=[16,32,64, 128,256], n_class=43, kernel_size=3, use_skip=True):
         super().__init__()
         c = 1
         self.use_skip = use_skip
