@@ -82,7 +82,7 @@ if __name__ == '__main__':
     parser.add_argument('-lr', '--learning_rate', type=float, default=1e-2)
     parser.add_argument('-c', '--continue_training', action='store_true')
     parser.add_argument('-t', '--transform',
-                        default='Compose([CenterCrop((18,18)),Pad(2),1,RandomHorizontalFlip(), ToTensor()])')
+                        default='Compose([CenterCrop((18,18)),Pad(2),RandomHorizontalFlip(), ToTensor()])')
 
     args = parser.parse_args()
     train(args)
