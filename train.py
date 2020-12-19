@@ -15,7 +15,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def train(args):
     train_logger = None
     if args.log_dir is not None:
-        name = "epochs: " + args.num_epoch + "; lr: " + args.learning_rate
+        name = "epochs: %d" + args.num_epoch + "; lr: %d" + args.learning_rate
         train_logger = tb.SummaryWriter(path.join(args.log_dir, "train_run w/" + name), flush_secs=1)
     LABEL_NAMES = [str(i) for i in range(0,43)]
     
