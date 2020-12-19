@@ -15,8 +15,8 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def train(args):
     train_logger = None
     if args.log_dir is not None:
-        name = "epochs: %d" + int(args.num_epoch) + "; lr: %d" + int(args.learning_rate)
-        train_logger = tb.SummaryWriter(path.join(args.log_dir, "train_run w/" + name), flush_secs=1)
+        log_name = 'lr=%s_max_epochs=%s' % (args.learning_rate,args.num_epoch)
+        train_logger = tb.SummaryWriter(path.join(args.log_dir, 'train')+ '/%s' % (log_name), flush_secs=1)
     LABEL_NAMES = [str(i) for i in range(0,43)]
     
     model = Detector().to(device)
