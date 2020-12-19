@@ -10,7 +10,6 @@ import torch.utils.tensorboard as tb
 
 TRAIN_PATH = "data/"
 
-train_data = load_data(TRAIN_PATH)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def train(args):
@@ -18,8 +17,7 @@ def train(args):
     if args.log_dir is not None:
         train_logger = tb.SummaryWriter(path.join(args.log_dir, 'train'), flush_secs=1)
 
-    device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-
+    train_data = load_data(TRAIN_PATH,batch_size=256)
     model = Detector().to(device)
     if args.continue_training:
         model.load_state_dict(torch.load(path.join(path.dirname(path.abspath(__file__)), 'det.th')))
