@@ -52,7 +52,7 @@ class Detector(torch.nn.Module):
 
     def forward(self, x):
         up_activation = []
-        for i in range(self.n_conv)[0:5]:
+        for i in range(self.n_conv):
             # Add all the information required for skip connections
             up_activation.append(x)
             x = self._modules['conv%d' % i](x)
