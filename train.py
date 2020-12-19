@@ -25,6 +25,7 @@ def train(args):
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay=1e-5)
     loss = torch.nn.CrossEntropyLoss()
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 15,.1)
 
     import inspect
     transform = eval(args.transform,
@@ -66,6 +67,7 @@ def train(args):
                             ha="center", va="center", color="black")
             train_logger.add_figure('confusion', f, global_step)
 
+        scheduler.step()
         save_model(model)
 
 
@@ -80,7 +82,7 @@ if __name__ == '__main__':
     parser.add_argument('-lr', '--learning_rate', type=float, default=1e-2)
     parser.add_argument('-c', '--continue_training', action='store_true')
     parser.add_argument('-t', '--transform',
-                        default='Compose([RandomPerspective(.5,.6),RandomHorizontalFlip(), ToTensor()])')
+                        default='Compose([CenterCrop((18,18)),Pad(2),1,RandomHorizontalFlip(), ToTensor()])')
 
     args = parser.parse_args()
     train(args)
