@@ -25,7 +25,7 @@ def train(args):
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay=1e-5)
     loss = torch.nn.CrossEntropyLoss()
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 15,.1)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 30, .5)
 
     import inspect
     transform = eval(args.transform,
