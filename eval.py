@@ -21,7 +21,7 @@ def predict():
         
         y = f(x)
         # preds.append(int(torch.max(y.data, 1)[1].numpy()))
-        preds.append(y.detach().numpy())
+        preds.append(y.numpy())
         print(y)
     
     # predictions = pd.DataFrame(data = preds, columns = ["Y"], index = range(0,28051))
