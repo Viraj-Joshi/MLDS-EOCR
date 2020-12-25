@@ -9,7 +9,9 @@ EVAL_DATA = "predictions/"
 def predict():
     f = load_model()
     preds = []
-    for i in range(28051):    
+    for i in range(28051):
+        if i % 1000 == 0:
+            print(i)    
         im_name = '%0*d' % (5, i+1) + ".jpg"
         f.eval()
         x = Image.open(EVAL_DATA+im_name)
