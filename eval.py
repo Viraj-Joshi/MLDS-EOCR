@@ -4,6 +4,7 @@ from PIL import Image
 import numpy as np
 import pandas as pd
 import torch
+import torch.nn.functional as F
 
 EVAL_DATA = "predictions/"
 def predict():
@@ -21,8 +22,8 @@ def predict():
         
         y = f(x)
         # preds.append(int(torch.max(y.data, 1)[1].numpy()))
-        preds.append(y)
-        print(y)
+        preds.append(F.softmax(y,dim=1))
+        print(F.softmax(y,dim=1))
     
     # predictions = pd.DataFrame(data = preds, columns = ["Y"], index = range(0,28051))
     # predictions.to_csv("predictions.csv")
