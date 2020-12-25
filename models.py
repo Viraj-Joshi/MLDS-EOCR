@@ -60,7 +60,7 @@ class Detector(torch.nn.Module):
             if self.use_skip:
                 x = torch.cat([x, up_activation[i]], dim=1)
         x = self.classifier(x)
-        x = torch.nn.Softmax(x.mean([2,3]),dim=1)
+        x = x.mean([2,3])
         return x
 
 
