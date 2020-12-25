@@ -43,7 +43,8 @@ class Detector(torch.nn.Module):
             c = l
             if self.use_skip:
                 c += skip_layer_size[i]
-        self.classifier = torch.nn.Conv2d(c-2, n_class, 1)
+        # self.classifier = torch.nn.Conv2d(c-2, n_class, 1)
+        self.classifier = torch.nn.Linear(c,n_class)
 
     def forward(self, x):
         up_activation = []
@@ -59,8 +60,9 @@ class Detector(torch.nn.Module):
             # Add the skip connection
             if self.use_skip:
                 x = torch.cat([x, up_activation[i]], dim=1)
-        x = self.classifier(x)
+        
         x = x.mean([2,3])
+        x = self.classifier(x)
         return x
 
 

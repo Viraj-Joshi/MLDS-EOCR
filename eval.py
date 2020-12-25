@@ -20,9 +20,11 @@ def predict():
         x = x.view(1,1,20,20)
         
         y = f(x)
-        preds.append(int(torch.max(y.data, 1)[1].numpy()))
+        # preds.append(int(torch.max(y.data, 1)[1].numpy()))
+        preds.append(y.detach().numpy())
+        print(y)
     
-    predictions = pd.DataFrame(data = preds, columns = ["Y"], index = range(0,28051))
-    predictions.to_csv("predictions.csv")
+    # predictions = pd.DataFrame(data = preds, columns = ["Y"], index = range(0,28051))
+    # predictions.to_csv("predictions.csv")
 if __name__ == '__main__':
     predict()
