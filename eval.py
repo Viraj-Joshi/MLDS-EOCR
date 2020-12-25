@@ -18,3 +18,6 @@ def predict():
         y = f(x)
         prediction = int(torch.max(y.data, 1)[1].numpy())
         print(prediction)
+
+if __name__ == '__main__':
+    predict()
