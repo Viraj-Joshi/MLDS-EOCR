@@ -12,7 +12,7 @@ def predict():
         x = Image.open(EVAL_DATA+im_name)
         transform=transforms.ToTensor()
 
-        x = transform(img)
+        x = transform(x)
         y = f(x)
         arr = y.data.cpu().numpy()
         # write CSV
