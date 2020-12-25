@@ -1,4 +1,4 @@
-from train import load_model
+from models import load_model
 from torchvision import transforms
 from PIL import Image
 import numpy as np
