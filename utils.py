@@ -11,7 +11,6 @@ from torchvision.transforms import functional as Fs
 
 class SuperTuxDataset(Dataset):
     def __init__(self, dataset_path,transform=transforms.ToTensor()):
-        import csv
         from os import path
         self.data = []
         self.transform = transform
@@ -40,6 +39,33 @@ class SuperTuxDataset(Dataset):
 
         img, lbl = self.data[idx]
         return self.transform(img), lbl
+
+def generate_transition_matrix():
+    LABEL_NAMES = [str(i) for i in range(0,43)]
+    states = []
+    with open('labels.csv') as f:
+        reader = csv.reader(f)
+        for fname, label in reader:
+            if label in LABEL_NAMES:
+                states.append(int(label))
+    
+    def transition_matrix(transitions):
+        n = 1+ max(transitions) #number of states
+
+        M = [[0]*n for _ in range(n)]
+
+        for (i,j) in zip(transitions,transitions[1:]):
+            M[i][j] += 1
+
+        #now convert to probabilities:
+        for row in M:
+            s = sum(row)
+            if s > 0:
+                row[:] = [f/s for f in row]
+        return M
+    
+    M = transition_matrix(states)
+    for row in M: print(' '.join('{0:.2f}'.format(x) for x in row))
 
 
 def load_data(dataset_path, num_workers=0, batch_size=256, **kwargs):
