@@ -12,8 +12,8 @@ def predict():
     f = load_model()
     preds = []
     for i in range(28051):
-        if i % 1000 == 0:
-            print(i)    
+        if i % 7000  == 0:
+            print("%d",i / 28051)    
         im_name = '%0*d' % (5, i+1) + ".jpg"
         f.eval()
         x = Image.open(EVAL_DATA+im_name)
@@ -31,7 +31,9 @@ def predict():
 
     # Apply Viterbi algorithm (log variant)
     A,C = generate_matrices()
-    B = EMISSION_MATRIX
+    A = np.array(A)
+    C = np.array(C)
+    B = np.array(EMISSION_MATRIX)
     # B = A
     O = preds
     S_opt, D_log, E = viterbi_log(A, C, B, O)
