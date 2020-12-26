@@ -13,7 +13,7 @@ def predict():
     preds = []
     for i in range(28051):
         if i % 7000  == 0:
-            print("%d",i / 28051)    
+            print(i / 28051)    
         im_name = '%0*d' % (5, i+1) + ".jpg"
         f.eval()
         x = Image.open(EVAL_DATA+im_name)

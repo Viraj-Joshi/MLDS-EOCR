@@ -24,7 +24,7 @@ def train(args):
         model.load_state_dict(torch.load(path.join(path.dirname(path.abspath(__file__)), 'det.th')))
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay=1e-5)
-    loss = torch.nn.CrossEntropyLoss()
+    loss = torch.nn.CrossEntropyLoss(reduction='none').to(device)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 30, .5)
 
     import inspect
@@ -33,6 +33,8 @@ def train(args):
     train_data = load_data(TRAIN_PATH,batch_size=256,transform = transform)
 
     global_step = 0
+    gamma = 2
+    alpha = .25
     for epoch in range(args.num_epoch):
         model.train()
         confusion = ConfusionMatrix(len(LABEL_NAMES))
@@ -42,14 +44,17 @@ def train(args):
             img, label = img.to(device), label.to(device)
 
             logit = model(img)
-            loss_val = loss(logit, label)
+            ce_loss = loss(logit, label)
+            pt = torch.exp(-ce_loss)
+            focal_loss = (alpha * ((1 - pt) ** gamma) * ce_loss).mean()
+
             confusion.add(logit.argmax(1), label)
 
             if train_logger is not None:
-                train_logger.add_scalar('loss', loss_val, global_step)
+                train_logger.add_scalar('loss', focal_loss, global_step)
 
             optimizer.zero_grad()
-            loss_val.backward()
+            focal_loss.backward()
             optimizer.step()
             global_step += 1
 
@@ -66,7 +71,7 @@ def train(args):
                     ax.text(j, i, format(confusion.per_class[i, j], '.2f'),
                             ha="center", va="center", color="black")
             train_logger.add_figure('confusion', f, global_step)
-        
+
         scheduler.step()
         save_model(model)
 
