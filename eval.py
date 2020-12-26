@@ -1,5 +1,5 @@
 from models import load_model
-from utils import generate_transition_matrix
+from utils import generate_matrices
 from torchvision import transforms
 from PIL import Image
 import numpy as np
@@ -30,9 +30,16 @@ def predict():
     predictions.to_csv("predictions_orig.csv")
 
     # Apply Viterbi algorithm (log variant)
-    A = np.array(generate_transition_matrix())
-    B = 
-    C = [1/43] * 43
+    A,C = generate_matrices()
+    # B = [
+    #     [1] + [0] * 42,
+    #     [0] + [1] + [0]*42,
+    #     [0]*2 + [1] + [0]*40,
+    #     [0]*3 + [.93] +
+
+
+    # ]
+    B = A
     O = preds
     S_opt, D_log, E = viterbi_log(A, C, B, O)
 

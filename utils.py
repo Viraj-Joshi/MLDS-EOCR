@@ -1,6 +1,7 @@
 import csv
 import os
 import pandas as pd
+import numpy as np
 import torch
 
 from PIL import Image
@@ -40,7 +41,7 @@ class SuperTuxDataset(Dataset):
         img, lbl = self.data[idx]
         return self.transform(img), lbl
 
-def generate_transition_matrix():
+def generate_matrices():
     LABEL_NAMES = [str(i) for i in range(0,43)]
     states = []
     with open('labels.csv') as f:
@@ -63,11 +64,17 @@ def generate_transition_matrix():
             if s > 0:
                 row[:] = [f/s for f in row]
         return M
-    
+    def initial_conditions(states):
+        I = [0] * 43
+        for i in states:
+            I[i]+=1
+        return np.array(I)/len(states)
+
     M = transition_matrix(states)
+    I = initial_conditions(states)
     # for row in M: print(' '.join('{0:.2f}'.format(x) for x in row))
 
-    return M
+    return M, I
 
 def load_data(dataset_path, num_workers=0, batch_size=256, **kwargs):
     dataset = SuperTuxDataset(dataset_path,**kwargs)

@@ -66,7 +66,7 @@ def train(args):
                     ax.text(j, i, format(confusion.per_class[i, j], '.2f'),
                             ha="center", va="center", color="black")
             train_logger.add_figure('confusion', f, global_step)
-
+        
         scheduler.step()
         save_model(model)
 
