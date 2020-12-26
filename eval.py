@@ -1,5 +1,5 @@
 from models import load_model
-from utils import generate_matrices
+from utils import generate_matrices, EMISSION_MATRIX
 from torchvision import transforms
 from PIL import Image
 import numpy as np
@@ -31,15 +31,8 @@ def predict():
 
     # Apply Viterbi algorithm (log variant)
     A,C = generate_matrices()
-    # B = [
-    #     [1] + [0] * 42,
-    #     [0] + [1] + [0]*42,
-    #     [0]*2 + [1] + [0]*40,
-    #     [0]*3 + [.93] +
-
-
-    # ]
-    B = A
+    B = EMISSION_MATRIX
+    # B = A
     O = preds
     S_opt, D_log, E = viterbi_log(A, C, B, O)
 
