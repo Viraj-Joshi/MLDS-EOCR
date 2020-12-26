@@ -67,6 +67,7 @@ def generate_transition_matrix():
     M = transition_matrix(states)
     for row in M: print(' '.join('{0:.2f}'.format(x) for x in row))
 
+    return M
 
 def load_data(dataset_path, num_workers=0, batch_size=256, **kwargs):
     dataset = SuperTuxDataset(dataset_path,**kwargs)

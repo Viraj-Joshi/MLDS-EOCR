@@ -1,4 +1,5 @@
 from models import load_model
+from utils import generate_transition_matrix
 from torchvision import transforms
 from PIL import Image
 import numpy as np
@@ -21,18 +22,20 @@ def predict():
         x = x.view(1,1,20,20)
         
         y = f(x)
-        # preds.append(int(torch.max(y.data, 1)[1].numpy()))
-        preds.append(F.softmax(y,dim=1))
-        print(F.softmax(y,dim=1))
+        preds.append(int(torch.max(y.data, 1)[1].numpy()))
+        # preds.append(F.softmax(y,dim=1))
+        # print(F.softmax(y,dim=1))
     
     # predictions = pd.DataFrame(data = preds, columns = ["Y"], index = range(0,28051))
     # predictions.to_csv("predictions.csv")
 
     # Apply Viterbi algorithm (log variant)
-    # A = 
-    # B = 
-    # C = 
-    # S_opt, D_log, E = viterbi_log(A, C, B, O)
+    A = np.array(generate_transition_matrix())
+    B = np.array(generate_transition_matrix())
+    C = [1/43] * 43
+    O = preds
+    S_opt, D_log, E = viterbi_log(A, C, B, O)
+    print(S_opt)
 
 def viterbi_log(A, C, B, O):
     """Viterbi algorithm (log variant) for solving the uncovering problem
@@ -42,7 +45,7 @@ def viterbi_log(A, C, B, O):
     Args:
         A: State transition probability matrix of dimension I x I
         C: Initial state distribution  of dimension I
-        B: Output probabihtlity matrix of dimension I x K
+        B: Output probability matrix of dimension I x K
         O: Observation sequence of length N
 
     Returns:
