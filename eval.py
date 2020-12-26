@@ -26,16 +26,18 @@ def predict():
         # preds.append(F.softmax(y,dim=1))
         # print(F.softmax(y,dim=1))
     
-    # predictions = pd.DataFrame(data = preds, columns = ["Y"], index = range(0,28051))
-    # predictions.to_csv("predictions.csv")
+    predictions = pd.DataFrame(data = preds, columns = ["Y"], index = range(0,28051))
+    predictions.to_csv("predictions_orig.csv")
 
     # Apply Viterbi algorithm (log variant)
     A = np.array(generate_transition_matrix())
-    B = np.array(generate_transition_matrix())
+    B = 
     C = [1/43] * 43
     O = preds
     S_opt, D_log, E = viterbi_log(A, C, B, O)
-    print(S_opt)
+
+    predictions = pd.DataFrame(data = S_opt, columns = ["Y"], index = range(0,28051))
+    predictions.to_csv("predictions_HMM.csv")
 
 def viterbi_log(A, C, B, O):
     """Viterbi algorithm (log variant) for solving the uncovering problem

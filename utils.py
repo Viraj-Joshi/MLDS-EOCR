@@ -65,7 +65,7 @@ def generate_transition_matrix():
         return M
     
     M = transition_matrix(states)
-    for row in M: print(' '.join('{0:.2f}'.format(x) for x in row))
+    # for row in M: print(' '.join('{0:.2f}'.format(x) for x in row))
 
     return M
 
