@@ -17,7 +17,7 @@ def predict():
         im_name = '%0*d' % (5, i+1) + ".jpg"
         f.eval()
         x = Image.open(EVAL_DATA+im_name)
-        transform=transforms.Compose([[CenterCrop((18,18)),Pad(2,fill=255),ToTensor()])
+        transform=transforms.Compose([CenterCrop((18,18)),Pad(2,fill=255),ToTensor()])
         x = transform(x)
         x = x.view(1,1,20,20)
         
