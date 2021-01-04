@@ -13,11 +13,11 @@ def predict():
     preds = []
     for i in range(28051):
         if i % 7000  == 0:
-            print(i / 28051)    
+            print(f"{i / 28051 * 100}% done")    
         im_name = '%0*d' % (5, i+1) + ".jpg"
         f.eval()
         x = Image.open(EVAL_DATA+im_name)
-        transform=transforms.ToTensor()
+        transform=transforms.Compose([[CenterCrop((18,18)),Pad(2,fill=255),ToTensor()])
         x = transform(x)
         x = x.view(1,1,20,20)
         
@@ -38,7 +38,8 @@ def predict():
     O = preds
     S_opt, D_log, E = viterbi_log(A, C, B, O)
 
-    predictions = pd.DataFrame(data = S_opt, columns = ["Y"], index = range(0,28051))
+    predictions = pd.DataFrame(data = S_opt, columns = ["category"], index = range(0,28051))
+    predictions.index.name = 'Id'
     predictions.to_csv("predictions_HMM.csv")
 
 def viterbi_log(A, C, B, O):
